@@ -1,0 +1,15 @@
+﻿# Financial Dashboard
+
+This is a simple financial news + market impact dashboard with TradingView charts.
+
+## How to Deploy on GitHub Pages
+1. Fork or create a new repo.
+2. Upload `index.html` to the root of the repo.
+3. Go to **Settings → Pages**.
+4. Under "Source", select `main` branch and `/root`.
+5. Save — your site will be live at:
+   `https://<your-username>.github.io/<repo-name>/index.html`
+
+## Backend Requirement
+- Make sure your FastAPI backend is running at `http://localhost:8000/news`.
+- If you want GitHub Pages to show demo data without backend, replace the fetch call with static JSON.

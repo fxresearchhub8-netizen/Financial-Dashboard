@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Financial News & Market Impact</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
+    h1 { color: #333; }
+    .news-item { background: #fff; padding: 15px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .impact { color: #0066cc; }
+    iframe { border: none; margin-top: 10px; }
+    .charts { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 30px; }
+    .chart-box { background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+  <h1>Financial News & Market Impact</h1>
+  <div id="news"></div>
+
+  <h2>Live Market Charts</h2>
+  <div class="charts">
+    <div class="chart-box">
+      <h3>EUR/USD</h3>
+      <iframe src="https://s.tradingview.com/widgetembed/?symbol=FX:EURUSD&interval=60&theme=light&style=1&timezone=Etc/UTC"
+              width="500" height="300"></iframe>
+    </div>
+    <div class="chart-box">
+      <h3>Gold (XAU/USD)</h3>
+      <iframe src="https://s.tradingview.com/widgetembed/?symbol=OANDA:XAUUSD&interval=60&theme=light&style=1&timezone=Etc/UTC"
+              width="500" height="300"></iframe>
+    </div>
+    <div class="chart-box">
+      <h3>Bitcoin (BTC/USD)</h3>
+      <iframe src="https://s.tradingview.com/widgetembed/?symbol=BITSTAMP:BTCUSD&interval=60&theme=light&style=1&timezone=Etc/UTC"
+              width="500" height="300"></iframe>
+    </div>
+  </div>
+
+  <script>
+    async function loadNews() {
+      try {
+        const res = await fetch("http://localhost:8000/news");
+        const data = await res.json();
+        const container = document.getElementById("news");
+        data.news_analysis.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "news-item";
+          div.innerHTML = `
+            <h3>${item.headline}</h3>
+            <p><strong>Source:</strong> ${item.source}</p>
+            <p><strong>Sentiment:</strong> ${item.sentiment.label} (${item.sentiment.score.toFixed(2)})</p>
+            <p class="impact"><strong>Impact:</strong> ${
+              Object.entries(item.impact).map(([k,v]) => `${k}: ${v}`).join(", ")
+            }</p>
+            <a href="${item.url}" target="_blank">Read more</a>
+          `;
+          container.appendChild(div);
+        });
+      } catch (err) {
+        document.getElementById("news").innerHTML = "<p>Could not load news. Make sure backend is running.</p>";
+      }
+    }
+    loadNews();
+  </script>
+</body>
+</html>
+
